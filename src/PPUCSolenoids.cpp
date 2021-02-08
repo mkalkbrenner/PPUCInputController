@@ -3,7 +3,7 @@
 PPUCSolenoids::PPUCSolenoids(String controllerType, PPUCEventDispatcher* ed) {
     eventDispatcher = ed;
 
-    if (controllerType == "PPUC-Arduino-0.1.0") {
+    if (controllerType == "ArduinoMega") {
         pins[0] = 8;
         pins[1] = 9;
         pins[2] = 10;

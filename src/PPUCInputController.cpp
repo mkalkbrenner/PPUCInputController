@@ -4,7 +4,7 @@ PPUCInputController::PPUCInputController(String controllerType) {
     _eventDispatcher = new PPUCEventDispatcher();
     _solenoids = new PPUCSolenoids(controllerType, _eventDispatcher);
 
-    if (controllerType == "PPUC-Arduino-0.1.0") {
+    if (controllerType == "ArduinoMega") {
         _switchMatrix = new PPUCSwitchMatrix(_eventDispatcher);
         _lightMatrix = new PPUCLightMatrix(_eventDispatcher);
         _pin2Dmd = new PPUCPIN2DMD(_eventDispatcher);
