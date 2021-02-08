@@ -8,7 +8,7 @@ PPUCInputController::PPUCInputController(String controllerType) {
         _switchMatrix = new PPUCSwitchMatrix(_eventDispatcher);
         _lightMatrix = new PPUCLightMatrix(_eventDispatcher);
         _pin2Dmd = new PPUCPIN2DMD(_eventDispatcher);
-        _pupComLink = new PUPComLink();
+        _pupComLink = new PPUCPUPComLink();
     } else {
         Serial.print("Unsupported Input Controller: ");
         Serial.println(controllerType);

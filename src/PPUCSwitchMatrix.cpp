@@ -1,7 +1,7 @@
 #include "PPUCSwitchMatrix.h"
 
 // see https://forum.arduino.cc/index.php?topic=398610.0
-PPUCSwitchMatrix* SwitchMatrix::switchMatrixInstance = NULL;
+PPUCSwitchMatrix* PPUCSwitchMatrix::switchMatrixInstance = NULL;
 
 void PPUCSwitchMatrix::start() {
     attachInterrupt(digitalPinToInterrupt(2), PPUCSwitchMatrix::_readRow, RISING);

@@ -15,7 +15,7 @@
 
 class PPUCPIN2DMD {
 public:
-    PPUCPIN2DMD(EventDispatcher* eD) {
+    PPUCPIN2DMD(PPUCEventDispatcher* eD) {
         eventDispatcher = eD;
         reset();
     }

@@ -32,9 +32,9 @@
 // cycles per original interval, config B
 #define ORIG_CYCLES_B (ORIG_INT / TTAG_INT_B)
 
-class PPUCLightMatrix : public Matrix {
+class PPUCLightMatrix : public PPUCMatrix {
 public:
-    PPUCLightMatrix(PPUCEventDispatcher* eD) : Matrix(eD) {
+    PPUCLightMatrix(PPUCEventDispatcher* eD) : PPUCMatrix(eD) {
         lightMatrixInstance = this;
 
         pinMode(5, INPUT);

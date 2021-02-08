@@ -4,7 +4,7 @@
 PPUCLightMatrix* PPUCLightMatrix::lightMatrixInstance = NULL;
 
 void PPUCLightMatrix::start() {
-    Timer1.attachInterrupt(LightMatrix::_readRow);
+    Timer1.attachInterrupt(PPUCLightMatrix::_readRow);
 }
 
 void PPUCLightMatrix::stop() {
@@ -60,7 +60,7 @@ void PPUCLightMatrix::_readRow() {
     lightMatrixInstance->sLastRowMask = inRowMask;
 }
 
-uint16_t LightMatrix::sampleInput() {
+uint16_t PPUCLightMatrix::sampleInput() {
     // drive CLK and LOAD low
     digitalWrite(6, LOW);
     digitalWrite(7, LOW);

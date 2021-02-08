@@ -40,7 +40,7 @@ private:
     PPUCLightMatrix *_lightMatrix;
     PPUCPIN2DMD *_pin2Dmd;
     PPUCPUPComLink *_pupComLink;
-    EventDispatcher *_eventDispatcher;
+    PPUCEventDispatcher *_eventDispatcher;
 };
 
 #endif
