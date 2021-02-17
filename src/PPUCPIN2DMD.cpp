@@ -20,7 +20,7 @@ void PPUCPIN2DMD::update() {
             if (eventByte != 0) {
                 byte nullByte = hwSerial->read();
                 if (nullByte == 0) {
-                    eventDispatcher->dispatch(EVENT_SOURCE_DMD, word(deviceByte - 100, eventByte));
+                    eventDispatcher->dispatch(new PPUCEvent(EVENT_SOURCE_DMD, word(deviceByte - 100, eventByte)));
 
                     if (++eventCacheCounter > PIN2DMD_EVENT_CACHE_SIZE) {
                         eventCacheCounter = 0;

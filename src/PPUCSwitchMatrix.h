@@ -9,6 +9,7 @@
 #define PPUCSwitchMatrix_h
 
 #include <Arduino.h>
+#include <PPUCEvent.h>
 #include <PPUCEventDispatcher.h>
 
 #include "PPUCMatrix.h"

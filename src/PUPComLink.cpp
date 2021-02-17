@@ -5,8 +5,8 @@ void PPUCPUPComLink::setSerial(HardwareSerial &reference) {
     ((HardwareSerial*) hwSerial)->begin(115200, SERIAL_8N1);
 }
 
-void PPUCPUPComLink::handleEvent(char sourceId, word eventId, byte value) {
-    write(PUP_POST_EVENT_COMMAND, sourceId, eventId, value);
+void PPUCPUPComLink::handleEvent(PPUCEvent* event) {
+    write(PUP_POST_EVENT_COMMAND, event->sourceId, event->eventId, event->value);
 }
 
 void PPUCPUPComLink::postEvent(char msgtype, int msgindex, int msgvalue) {

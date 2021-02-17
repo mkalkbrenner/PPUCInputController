@@ -9,6 +9,7 @@
 #define PPUCPUPCOMLINK_h
 
 #include <Arduino.h>
+#include <PPUCEvent.h>
 #include <PPUCEventListener.h>
 
 #define PUP_POST_EVENT_COMMAND 80 // "P"
@@ -26,7 +27,7 @@ public:
 
     void setSerial(HardwareSerial &reference);
 
-    void handleEvent(char sourceId, word eventId, byte value);
+    void handleEvent(PPUCEvent* event);
 
     void postEvent(char msgtype, int msgindex, int msgvalue);
 

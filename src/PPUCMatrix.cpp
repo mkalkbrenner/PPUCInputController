@@ -48,7 +48,7 @@ void PPUCMatrix::update() {
                 if (row_col == registeredFieldRowCol[i]) {
                     byte bit = 1 << row;
                     if ((rows[col] & bit) != (previousRows[col] & bit)) {
-                        eventDispatcher->dispatch(eventSource, word(registeredFieldNum[i]), rows[col] & bit);
+                        eventDispatcher->dispatch(new PPUCEvent(eventSource, word(registeredFieldNum[i]), rows[col] & bit));
                     }
                 }
             }
