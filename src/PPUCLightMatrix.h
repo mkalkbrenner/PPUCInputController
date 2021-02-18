@@ -11,6 +11,7 @@
 
 #include <Arduino.h>
 #include <TimerOne.h>
+#include <PPUCEvent.h>
 
 #include "PPUCMatrix.h"
 
