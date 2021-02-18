@@ -10,6 +10,7 @@
 
 #include <Arduino.h>
 #include <PPUCEventDispatcher.h>
+#include <PPUCEvent.h>
 
 #ifndef MAX_FIELDS_REGISTERED
 #define MAX_FIELDS_REGISTERED 72

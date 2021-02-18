@@ -9,6 +9,7 @@
 #define PPUCPIN2DMD_h
 
 #include <Arduino.h>
+#include <PPUCEvent.h>
 #include <PPUCEventDispatcher.h>
 
 #define PIN2DMD_EVENT_CACHE_SIZE 10

@@ -45,7 +45,7 @@ void PPUCSolenoids::update() {
         previousPinStates[i] = pinStates[i];
         pinStates[i] = digitalRead(pins[i]);
         if (registeredNum[i] && (previousPinStates[i] != pinStates[i])) {
-            eventDispatcher->dispatch(EVENT_SOURCE_SOLENOID, word(registeredNum[i]), pinStates[i]);
+            eventDispatcher->dispatch(new PPUCEvent(EVENT_SOURCE_SOLENOID, word(registeredNum[i]), pinStates[i]));
         }
     }
 }
