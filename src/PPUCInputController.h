@@ -17,6 +17,7 @@
 #include "PPUCLightMatrix.h"
 #include "PPUCPIN2DMD.h"
 #include "PUPComLink.h"
+#include "PPUCInputControllerTestButtons.h"
 
 class PPUCInputController {
 public:
@@ -32,6 +33,8 @@ public:
 
     PPUCPUPComLink *pupComLink();
 
+    PPUCInputControllerTestButtons *testButtons();
+
     PPUCEventDispatcher *eventDispatcher();
 
 private:
@@ -40,6 +43,7 @@ private:
     PPUCLightMatrix *_lightMatrix;
     PPUCPIN2DMD *_pin2Dmd;
     PPUCPUPComLink *_pupComLink;
+    PPUCInputControllerTestButtons *_testButtons;
     PPUCEventDispatcher *_eventDispatcher;
 };
 

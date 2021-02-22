@@ -1,6 +1,8 @@
 #include "PPUCInputController.h"
 
 PPUCInputController::PPUCInputController(String controllerType) {
+    pinMode(LED_BUILTIN, OUTPUT);
+
     _eventDispatcher = new PPUCEventDispatcher();
     _solenoids = new PPUCSolenoids(controllerType, _eventDispatcher);
 
@@ -9,6 +11,7 @@ PPUCInputController::PPUCInputController(String controllerType) {
         _lightMatrix = new PPUCLightMatrix(_eventDispatcher);
         _pin2Dmd = new PPUCPIN2DMD(_eventDispatcher);
         _pupComLink = new PPUCPUPComLink();
+        _testButtons = new PPUCInputControllerTestButtons(_eventDispatcher);
     } else {
         Serial.print("Unsupported Input Controller: ");
         Serial.println(controllerType);
@@ -33,6 +36,10 @@ PPUCPIN2DMD *PPUCInputController::pin2Dmd() {
 
 PPUCPUPComLink *PPUCInputController::pupComLink() {
     return _pupComLink;
+}
+
+PPUCInputControllerTestButtons *PPUCInputController::testButtons() {
+    return _testButtons;
 }
 
 PPUCEventDispatcher *PPUCInputController::eventDispatcher() {
