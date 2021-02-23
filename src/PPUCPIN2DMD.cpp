@@ -1,8 +1,8 @@
 #include "PPUCPIN2DMD.h"
 
 void PPUCPIN2DMD::setSerial(HardwareSerial &reference) {
-    hwSerial = &reference;
-    ((HardwareSerial*) hwSerial)->begin(57600);
+    hwSerial = (HardwareSerial*) &reference;
+    hwSerial->begin(57600);
 }
 
 void PPUCPIN2DMD::reset() {

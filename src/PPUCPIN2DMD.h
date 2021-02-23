@@ -35,7 +35,7 @@ private:
     uint16_t eventCache[PIN2DMD_EVENT_CACHE_SIZE];
     int eventCacheCounter;
 
-    Stream *hwSerial;
+    HardwareSerial* hwSerial;
 
 };
 

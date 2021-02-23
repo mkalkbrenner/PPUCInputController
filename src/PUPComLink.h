@@ -51,7 +51,7 @@ public:
 protected:
     void write(byte command, char msgtype, word msgindex, word msgvalue);
 
-    Stream *hwSerial;
+    HardwareSerial* hwSerial;
 };
 
 #endif

@@ -1,8 +1,8 @@
 #include "PUPComLink.h"
 
 void PPUCPUPComLink::setSerial(HardwareSerial &reference) {
-    hwSerial = &reference;
-    ((HardwareSerial*) hwSerial)->begin(115200, SERIAL_8N1);
+    hwSerial = (HardwareSerial*) &reference;
+    hwSerial->begin(115200, SERIAL_8N1);
 }
 
 void PPUCPUPComLink::handleEvent(PPUCEvent* event) {
