@@ -18,30 +18,30 @@ PPUCInputController::PPUCInputController(String controllerType) {
     }
 }
 
-PPUCSolenoids *PPUCInputController::solenoids() {
+PPUCSolenoids* PPUCInputController::solenoids() {
     return _solenoids;
 }
 
-PPUCSwitchMatrix *PPUCInputController::switchMatrix() {
+PPUCSwitchMatrix* PPUCInputController::switchMatrix() {
     return _switchMatrix;
 }
 
-PPUCLightMatrix *PPUCInputController::lightMatrix() {
+PPUCLightMatrix* PPUCInputController::lightMatrix() {
     return _lightMatrix;
 }
 
-PPUCPIN2DMD *PPUCInputController::pin2Dmd() {
+PPUCPIN2DMD* PPUCInputController::pin2Dmd() {
     return _pin2Dmd;
 }
 
-PPUCPUPComLink *PPUCInputController::pupComLink() {
+PPUCPUPComLink* PPUCInputController::pupComLink() {
     return _pupComLink;
 }
 
-PPUCInputControllerTestButtons *PPUCInputController::testButtons() {
+PPUCInputControllerTestButtons* PPUCInputController::testButtons() {
     return _testButtons;
 }
 
-PPUCEventDispatcher *PPUCInputController::eventDispatcher() {
+PPUCEventDispatcher* PPUCInputController::eventDispatcher() {
     return _eventDispatcher;
 }

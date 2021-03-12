@@ -23,28 +23,28 @@ class PPUCInputController {
 public:
     PPUCInputController(String controllerType);
 
-    PPUCSolenoids *solenoids();
+    PPUCSolenoids* solenoids();
 
-    PPUCSwitchMatrix *switchMatrix();
+    PPUCSwitchMatrix* switchMatrix();
 
-    PPUCLightMatrix *lightMatrix();
+    PPUCLightMatrix* lightMatrix();
 
-    PPUCPIN2DMD *pin2Dmd();
+    PPUCPIN2DMD* pin2Dmd();
 
-    PPUCPUPComLink *pupComLink();
+    PPUCPUPComLink* pupComLink();
 
-    PPUCInputControllerTestButtons *testButtons();
+    PPUCInputControllerTestButtons* testButtons();
 
-    PPUCEventDispatcher *eventDispatcher();
+    PPUCEventDispatcher* eventDispatcher();
 
 private:
-    PPUCSolenoids *_solenoids;
-    PPUCSwitchMatrix *_switchMatrix;
-    PPUCLightMatrix *_lightMatrix;
-    PPUCPIN2DMD *_pin2Dmd;
-    PPUCPUPComLink *_pupComLink;
-    PPUCInputControllerTestButtons *_testButtons;
-    PPUCEventDispatcher *_eventDispatcher;
+    PPUCSolenoids* _solenoids;
+    PPUCSwitchMatrix* _switchMatrix;
+    PPUCLightMatrix* _lightMatrix;
+    PPUCPIN2DMD* _pin2Dmd;
+    PPUCPUPComLink* _pupComLink;
+    PPUCInputControllerTestButtons* _testButtons;
+    PPUCEventDispatcher* _eventDispatcher;
 };
 
 #endif
