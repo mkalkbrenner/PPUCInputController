@@ -3,24 +3,19 @@
 PPUCInputControllerTestButtons::PPUCInputControllerTestButtons(PPUCEventDispatcher* eD) {
     eventDispatcher = eD;
 
-    pinMode(52, INPUT_PULLUP);
-    pinMode(53, INPUT_PULLUP);
+    for (int i = 0; i <= 1; i++) {
+        button[i] = new Bounce2::Button();
+        button[i]->attach(52 + i, INPUT_PULLUP);
+        button[i]->interval(10);
+        button[i]->setPressedState(LOW);
+    }
 }
 
 void PPUCInputControllerTestButtons::update() {
-    bool state = !digitalRead(52);
-    if (state && button3 != state) {
-        eventDispatcher->dispatch(new PPUCEvent(EVENT_SOURCE_SWITCH, word(203)));
-        // Switch debouncing, delay() should be avoided but it is ok for the test buttons.
-        delay(10);
+    for (int i = 0; i <= 1; i++) {
+        button[i]->update();
+        if (button[i]->pressed()) {
+            eventDispatcher->dispatch(new PPUCEvent(EVENT_SOURCE_SWITCH, word(0, 203 + i)));
+        }
     }
-    button3 = state;
-
-    state = !digitalRead(53);
-    if (state && button4 != state) {
-        eventDispatcher->dispatch(new PPUCEvent(EVENT_SOURCE_SWITCH, word(204)));
-        // Switch debouncing, delay() should be avoided but it is ok for the test buttons.
-        delay(10);
-    }
-    button4 = state;
 }
