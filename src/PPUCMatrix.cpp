@@ -29,6 +29,7 @@ void PPUCMatrix::registerAllFieldsAsEvent(String pinballType) {
                 registerFieldAsEvent(row, col, col * 10 + row);
             }
         }
+        system = 'D';
     }
     else if (pinballType == "DE") {
         byte light = 0;
@@ -37,6 +38,7 @@ void PPUCMatrix::registerAllFieldsAsEvent(String pinballType) {
                 registerFieldAsEvent(row, col, ++light);
             }
         }
+        system = 'W';
     }
 }
 
@@ -48,7 +50,7 @@ void PPUCMatrix::update() {
                 if (row_col == registeredFieldRowCol[i]) {
                     byte bit = 1 << row;
                     if ((rows[col] & bit) != (previousRows[col] & bit)) {
-                        eventDispatcher->dispatch(new PPUCEvent(eventSource, word(registeredFieldNum[i]), rows[col] & bit));
+                        eventDispatcher->dispatch(new PPUCEvent(eventSource, word(system, registeredFieldNum[i]), rows[col] & bit));
                     }
                 }
             }
