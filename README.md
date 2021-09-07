@@ -1,3 +1,3 @@
-# Pinball Power-Up Construction Kit
+# Pinball Power-Up Controller
 
 ## Input Controller
