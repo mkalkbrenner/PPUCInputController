@@ -1,4 +1,4 @@
-#include "PUPComLink.h"
+#include "PPUCPUPComLink.h"
 
 void PPUCPUPComLink::setSerial(HardwareSerial &reference) {
     hwSerial = (HardwareSerial*) &reference;

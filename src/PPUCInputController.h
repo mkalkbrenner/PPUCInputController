@@ -16,7 +16,7 @@
 #include "PPUCSwitchMatrix.h"
 #include "PPUCLightMatrix.h"
 #include "PPUCPIN2DMD.h"
-#include "PUPComLink.h"
+#include "PPUCPUPComLink.h"
 #include "PPUCInputControllerTestButtons.h"
 
 class PPUCInputController {
