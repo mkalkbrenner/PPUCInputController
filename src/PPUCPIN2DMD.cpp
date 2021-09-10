@@ -15,10 +15,19 @@ void PPUCPIN2DMD::reset() {
 void PPUCPIN2DMD::update() {
     if (hwSerial->available() > 2) {
         byte deviceByte = hwSerial->read();
+        if (debug) {
+            Serial.println(deviceByte, DEC);
+        }
         if (deviceByte != 0) {
             byte eventByte = hwSerial->read();
+            if (debug) {
+                Serial.println(eventByte, DEC);
+            }
             if (eventByte != 0) {
                 byte nullByte = hwSerial->read();
+                if (debug) {
+                    Serial.println(nullByte, DEC);
+                }
                 if (nullByte == 0) {
                     // Quick explanation:
                     // The PUP Player understands event IDs that are 8 bits long. But we assume that nobody needs that
@@ -59,4 +68,8 @@ void PPUCPIN2DMD::print() {
         Serial.print("device: "); Serial.print(highByte(eventCache[i]));
         Serial.print(" command: "); Serial.println(lowByte(eventCache[i]));
     }
+}
+
+void PPUCPIN2DMD::setDebug(bool value) {
+    debug = value;
 }

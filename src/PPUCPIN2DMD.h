@@ -29,6 +29,8 @@ public:
 
     void update();
 
+    void setDebug(bool value);
+
 private:
     PPUCEventDispatcher* eventDispatcher;
 
@@ -36,6 +38,8 @@ private:
     int eventCacheCounter;
 
     HardwareSerial* hwSerial;
+
+    bool debug = false;
 
 };
 
