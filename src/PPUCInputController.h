@@ -21,7 +21,7 @@
 
 class PPUCInputController {
 public:
-    PPUCInputController(String controllerType);
+    PPUCInputController(String controllerType, byte platform);
 
     PPUCSolenoids* solenoids();
 
@@ -36,6 +36,8 @@ public:
     PPUCInputControllerTestButtons* testButtons();
 
     PPUCEventDispatcher* eventDispatcher();
+
+    byte platform;
 
 private:
     PPUCSolenoids* _solenoids;

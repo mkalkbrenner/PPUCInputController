@@ -35,8 +35,10 @@
 
 class PPUCLightMatrix : public PPUCMatrix {
 public:
-    PPUCLightMatrix(PPUCEventDispatcher* eD) : PPUCMatrix(eD) {
+    PPUCLightMatrix(PPUCEventDispatcher* eD, byte pf) : PPUCMatrix(eD, pf) {
         lightMatrixInstance = this;
+
+        eventSource = EVENT_SOURCE_LIGHT;
 
         pinMode(5, INPUT);
         pinMode(6, OUTPUT);
@@ -60,9 +62,6 @@ public:
     // remember the last column and row samples
     volatile byte sLastColMask = 0;
     volatile byte sLastRowMask = 0;
-
-protected:
-    char eventSource = EVENT_SOURCE_LIGHT;
 
 private:
     static PPUCLightMatrix* lightMatrixInstance;

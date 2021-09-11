@@ -14,10 +14,21 @@
 
 #include "PPUCMatrix.h"
 
+#define CS_ODD  3
+#define CS_EVEN 2
+#define CS_X    4
+
 class PPUCSwitchMatrix : public PPUCMatrix {
 public:
-    PPUCSwitchMatrix(PPUCEventDispatcher* eD) : PPUCMatrix(eD) {
+    PPUCSwitchMatrix(PPUCEventDispatcher* eD, byte pf) : PPUCMatrix(eD, pf) {
         switchMatrixInstance = this;
+
+        eventSource = EVENT_SOURCE_SWITCH;
+
+        if (platform == PLATFORM_WPC) {
+            // Read rows 15us after column strobe signal.
+            rowReadDelay = 15;
+        }
 
         pinMode(2, INPUT);
         pinMode(3, INPUT);
@@ -37,12 +48,11 @@ public:
 
     void stop();
 
-    static void _readRow();
+    static void _readRowForOddColumn();
+    static void _readRowForEvenColumn();
 
     volatile byte columnCounter = -1;
-
-protected:
-    char eventSource = EVENT_SOURCE_SWITCH;
+    volatile int rowReadDelay = 0;
 
 private:
     static PPUCSwitchMatrix* switchMatrixInstance;

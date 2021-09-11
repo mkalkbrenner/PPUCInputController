@@ -25,6 +25,26 @@
 // ---+----+----+----+----+----+----+----+----
 // R8 | 18 | 28 | 38 | 48 | 58 | 68 | 78 | 88
 
+// WPC matrix numbering (IJ, STTNG, TZ):
+//
+//    | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 | C9
+// ---+----+----+----+----+----+----+----+----+----
+// R1 | 11 | 21 | 31 | 41 | 51 | 61 | 71 | 81 | 91
+// ---+----+----+----+----+----+----+----+----+----
+// R2 | 12 | 22 | 32 | 42 | 52 | 62 | 72 | 82 | 92
+// ---+----+----+----+----+----+----+----+----+----
+// R3 | 13 | 23 | 33 | 43 | 53 | 63 | 73 | 83 | 93
+// ---+----+----+----+----+----+----+----+----+----
+// R4 | 14 | 24 | 34 | 44 | 54 | 64 | 74 | 84 | 94
+// ---+----+----+----+----+----+----+----+----+----
+// R5 | 15 | 25 | 35 | 45 | 55 | 65 | 75 | 85 | 95
+// ---+----+----+----+----+----+----+----+----+----
+// R6 | 16 | 26 | 36 | 46 | 56 | 66 | 76 | 86 | 96
+// ---+----+----+----+----+----+----+----+----+----
+// R7 | 17 | 27 | 37 | 47 | 57 | 67 | 77 | 87 | 97
+// ---+----+----+----+----+----+----+----+----+----
+// R8 | 18 | 28 | 38 | 48 | 58 | 68 | 78 | 88 | 98
+
 // DE matrix numbering:
 //
 //    | C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8
@@ -45,6 +65,8 @@
 // ---+----+----+----+----+----+----+----+----
 // R8 |  8 | 16 | 24 | 32 | 40 | 48 | 56 | 64
 
+// In case of 9 Columns on WPC the 9th column is only read every second run.
+
 #ifndef PPUCMatrix_h
 #define PPUCMatrix_h
 
@@ -52,17 +74,17 @@
 #include <PPUCEventDispatcher.h>
 #include <PPUCEvent.h>
 
-#ifndef MAX_FIELDS_REGISTERED
-#define MAX_FIELDS_REGISTERED 72
-#endif
-
 #ifndef NUM_COLS
 #define NUM_COLS 9
 #endif
 
+#ifndef MAX_FIELDS_REGISTERED
+#define MAX_FIELDS_REGISTERED (NUM_COLS * 8)
+#endif
+
 class PPUCMatrix {
 public:
-    PPUCMatrix(PPUCEventDispatcher* eD);
+    PPUCMatrix(PPUCEventDispatcher* eD, byte pf);
 
     virtual void start() = 0;
 
@@ -76,7 +98,7 @@ public:
 
     void registerFieldAsEvent(byte row, byte column, byte number);
 
-    void registerAllFieldsAsEvent(String pinballType);
+    void registerAllFieldsAsEvent();
 
     static void _readRow() {}
 
@@ -87,13 +109,16 @@ protected:
     PPUCEventDispatcher* eventDispatcher;
 
     char eventSource;
-    char system = 'D'; // W => WPC, D => DE
 
     byte previousRows[NUM_COLS];
 
     int registeredFieldsCounter = -1;
     word registeredFieldRowCol[MAX_FIELDS_REGISTERED];
     byte registeredFieldNum[MAX_FIELDS_REGISTERED];
+
+    byte platform;
+
+    uint32_t nextUpdate = 0;
 };
 
 #endif

@@ -1,7 +1,8 @@
 #include "PPUCMatrix.h"
 
-PPUCMatrix::PPUCMatrix(PPUCEventDispatcher* eD) {
+PPUCMatrix::PPUCMatrix(PPUCEventDispatcher* eD, byte pf) {
     eventDispatcher = eD;
+    platform = pf;
 
     setLastColToRead(8);
 
@@ -22,40 +23,58 @@ void PPUCMatrix::registerFieldAsEvent(byte row, byte column, byte number) {
     }
 }
 
-void PPUCMatrix::registerAllFieldsAsEvent(String pinballType) {
-    if (pinballType == "WPC") {
+void PPUCMatrix::registerAllFieldsAsEvent() {
+    registeredFieldsCounter = -1;
+
+    if (platform == PLATFORM_WPC) {
         for (byte col = 1; col <= NUM_COLS; col++) {
             for (byte row = 1; row <= 8; row++) {
                 registerFieldAsEvent(row, col, col * 10 + row);
             }
         }
-        system = 'D';
     }
-    else if (pinballType == "DE") {
-        byte light = 0;
+    else if (platform == PLATFORM_DATA_EAST) {
+        byte number = 0;
         for (byte col = 1; col <= NUM_COLS; col++) {
             for (byte row = 1; row <= 8; row++) {
-                registerFieldAsEvent(row, col, ++light);
+                registerFieldAsEvent(row, col, ++number);
             }
         }
-        system = 'W';
     }
 }
 
 void PPUCMatrix::update() {
-    for (int col = 0; col < lastColToRead; col++) {
-        for (int row = 0; row < 8; row++) {
-            word row_col = word(row, col);
-            for (byte i = 0; i <= registeredFieldsCounter; i++) {
-                if (row_col == registeredFieldRowCol[i]) {
-                    byte bit = 1 << row;
-                    if ((rows[col] & bit) != (previousRows[col] & bit)) {
-                        eventDispatcher->dispatch(new PPUCEvent(eventSource, word(system, registeredFieldNum[i]), rows[col] & bit));
+    uint32_t ms = millis();
+    if (nextUpdate < ms) {
+        //Serial.println("ANFANG");
+        //Serial.println(eventSource);
+        //Serial.println("ENDE");
+        for (int col = 0; col < lastColToRead; col++) {
+            for (int row = 0; row < 8; row++) {
+                word row_col = word(row, col);
+                for (byte i = 0; i <= registeredFieldsCounter; i++) {
+                    if (row_col == registeredFieldRowCol[i]) {
+                        byte bit = 1 << row;
+                        if ((rows[col] & bit) != (previousRows[col] & bit)) {
+                            eventDispatcher->dispatch(
+                                new PPUCEvent(eventSource, word(0, registeredFieldNum[i]), (rows[col] & bit) ? 1 : 0)
+                            );
+                        }
                     }
                 }
             }
+            previousRows[col] = rows[col];
+            rows[col] = B00000000;
         }
-        previousRows[col] = rows[col];
+
+        if (platform == PLATFORM_WPC) {
+            // On WPC the switches are read every 2ms. Ensure that we have a complete read before sending next events.
+            nextUpdate = ms + 3;
+        }
+        else if (platform == PLATFORM_DATA_EAST) {
+            // @todo
+            nextUpdate = ms + 1;
+        }
     }
 }
 
