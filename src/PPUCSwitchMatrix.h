@@ -26,13 +26,13 @@ public:
         eventSource = EVENT_SOURCE_SWITCH;
 
         if (platform == PLATFORM_WPC) {
-            // Read rows 15us after column strobe signal.
-            rowReadDelay = 15;
+            // Read rows some micro seconds after column strobe signal.
+            rowReadDelay = 8;
         }
 
-        pinMode(2, INPUT);
-        pinMode(3, INPUT);
-        pinMode(4, INPUT);
+        pinMode(CS_ODD, INPUT);
+        pinMode(CS_EVEN, INPUT);
+        pinMode(CS_X, INPUT);
 
         pinMode(22, INPUT);
         pinMode(23, INPUT);
@@ -48,11 +48,13 @@ public:
 
     void stop();
 
+    void readRow(int pin);
     static void _readRowForOddColumn();
     static void _readRowForEvenColumn();
 
-    volatile byte columnCounter = -1;
-    volatile int rowReadDelay = 0;
+protected:
+    byte columnCounter = 255;
+    int rowReadDelay = 0;
 
 private:
     static PPUCSwitchMatrix* switchMatrixInstance;

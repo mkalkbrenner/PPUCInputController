@@ -13,44 +13,56 @@ void PPUCSwitchMatrix::stop() {
 }
 
 void PPUCSwitchMatrix::_readRowForOddColumn() {
-    delayMicroseconds(switchMatrixInstance->rowReadDelay);
-    //Serial.println("odd");
-
-    if (!digitalRead(CS_X)) {
-        //Serial.println("xxxxxxxxx");
-        switchMatrixInstance->columnCounter = 0;
-    }
-
-    if (switchMatrixInstance->columnCounter >= 0 &&
-        switchMatrixInstance->columnCounter < switchMatrixInstance->lastColToRead
-    ) {
-        //Serial.println(switchMatrixInstance->columnCounter, DEC);
-        //Serial.println(PINA, BIN);
-        // Read row return at PIN 22 - 29.
-        switchMatrixInstance->rows[switchMatrixInstance->columnCounter] |= PINA ^ B11111111;
-        //switchMatrixInstance->rows[matrixInstance->columnCounter] |= PINA;
-        switchMatrixInstance->columnCounter++;
-    }
-
-    detachInterrupt(digitalPinToInterrupt(CS_ODD));
-    attachInterrupt(digitalPinToInterrupt(CS_EVEN), PPUCSwitchMatrix::_readRowForEvenColumn, RISING);
+    //Serial.println("CS_ODD");
+    switchMatrixInstance->readRow(CS_ODD);
 }
 
 void PPUCSwitchMatrix::_readRowForEvenColumn() {
-    delayMicroseconds(switchMatrixInstance->rowReadDelay);
-    //Serial.println("even");
+    //Serial.println("CS_EVEN");
+    switchMatrixInstance->readRow(CS_EVEN);
+}
 
-    if (switchMatrixInstance->columnCounter >= 1 &&
-        switchMatrixInstance->columnCounter < switchMatrixInstance->lastColToRead
-    ) {
-        //Serial.println(switchMatrixInstance->columnCounter, DEC);
-        //Serial.println(PINA, BIN);
-        // Read row return at PIN 22 - 29.
-        switchMatrixInstance->rows[switchMatrixInstance->columnCounter] |= PINA ^ B11111111;
-        //switchMatrixInstance->rows[matrixInstance->columnCounter] |= PINA;
-        switchMatrixInstance->columnCounter++;
+void PPUCSwitchMatrix::readRow(int pin) {
+    // Immediately turn off further interrupts.
+    detachInterrupt(digitalPinToInterrupt(pin));
+
+    delayMicroseconds(rowReadDelay);
+
+    if (pin == CS_ODD && digitalRead(CS_X) == LOW) {
+        //Serial.println("CS_X");
+        columnCounter = 0;
     }
 
-    detachInterrupt(digitalPinToInterrupt(CS_EVEN));
-    attachInterrupt(digitalPinToInterrupt(CS_ODD), PPUCSwitchMatrix::_readRowForOddColumn, RISING);
+    if (columnCounter >= 0 && columnCounter < lastColToRead) {
+        //Serial.println(switchMatrixInstance->columnCounter, DEC);
+
+        // Read row return at PIN 22 - 29 three times and use the majority of bits.
+        byte a = PINA;
+        delayMicroseconds(4);
+        byte b = PINA;
+        delayMicroseconds(4);
+        byte c = PINA;
+
+        if (columnCounter > 0 ||
+            // The first column is only valid, if CS_X is still LOW. Otherwise it's noise.
+            (columnCounter == 0 && digitalRead(CS_X) == LOW)
+        ) {
+            //Serial.println("READ");
+            rows[columnCounter++] |= ((a & b) | (b & c) | (c & a)) ^ B11111111;
+        }
+        else {
+            columnCounter = 255;
+        }
+    }
+
+    if (columnCounter >= lastColToRead) {
+        columnCounter = 255;
+    }
+
+    if (pin == CS_ODD && columnCounter >= 0 && columnCounter < lastColToRead) {
+        attachInterrupt(digitalPinToInterrupt(CS_EVEN), PPUCSwitchMatrix::_readRowForEvenColumn, RISING);
+    }
+    else {
+        attachInterrupt(digitalPinToInterrupt(CS_ODD), PPUCSwitchMatrix::_readRowForOddColumn, RISING);
+    }
 }

@@ -46,9 +46,6 @@ void PPUCMatrix::registerAllFieldsAsEvent() {
 void PPUCMatrix::update() {
     uint32_t ms = millis();
     if (nextUpdate < ms) {
-        //Serial.println("ANFANG");
-        //Serial.println(eventSource);
-        //Serial.println("ENDE");
         for (int col = 0; col < lastColToRead; col++) {
             for (int row = 0; row < 8; row++) {
                 word row_col = word(row, col);
