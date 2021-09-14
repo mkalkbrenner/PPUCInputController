@@ -30,6 +30,8 @@ public:
             rowReadDelay = 8;
         }
 
+        maxChangesPerRead = 3;
+
         pinMode(CS_ODD, INPUT);
         pinMode(CS_EVEN, INPUT);
         pinMode(CS_X, INPUT);

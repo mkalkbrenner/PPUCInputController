@@ -27,7 +27,7 @@ void PPUCMatrix::registerAllFieldsAsEvent() {
     registeredFieldsCounter = -1;
 
     if (platform == PLATFORM_WPC) {
-        for (byte col = 1; col <= NUM_COLS; col++) {
+        for (byte col = 1; col <= lastColToRead; col++) {
             for (byte row = 1; row <= 8; row++) {
                 registerFieldAsEvent(row, col, col * 10 + row);
             }
@@ -35,7 +35,7 @@ void PPUCMatrix::registerAllFieldsAsEvent() {
     }
     else if (platform == PLATFORM_DATA_EAST) {
         byte number = 0;
-        for (byte col = 1; col <= NUM_COLS; col++) {
+        for (byte col = 1; col <= lastColToRead; col++) {
             for (byte row = 1; row <= 8; row++) {
                 registerFieldAsEvent(row, col, ++number);
             }
@@ -46,6 +46,10 @@ void PPUCMatrix::registerAllFieldsAsEvent() {
 void PPUCMatrix::update() {
     uint32_t ms = millis();
     if (nextUpdate < ms) {
+        byte fieldNum[maxChangesPerRead] = {0};
+        byte value[maxChangesPerRead] = {0};
+        byte counter = 0;
+
         for (int col = 0; col < lastColToRead; col++) {
             for (int row = 0; row < 8; row++) {
                 word row_col = word(row, col);
@@ -53,15 +57,28 @@ void PPUCMatrix::update() {
                     if (row_col == registeredFieldRowCol[i]) {
                         byte bit = 1 << row;
                         if ((rows[col] & bit) != (previousRows[col] & bit)) {
-                            eventDispatcher->dispatch(
-                                new PPUCEvent(eventSource, word(0, registeredFieldNum[i]), (rows[col] & bit) ? 1 : 0)
-                            );
+                            if (counter < maxChangesPerRead) {
+                                fieldNum[counter] = registeredFieldNum[i];
+                                value[counter++] = (rows[col] & bit) ? 1 : 0;
+                            }
+                            else {
+                                // Too many changes, assume erroneous read.
+                                counter = 255;
+                            }
                         }
                     }
                 }
             }
             previousRows[col] = rows[col];
             rows[col] = B00000000;
+        }
+
+        if (counter <= maxChangesPerRead) {
+            for (int i = 0; i < counter; i++) {
+                eventDispatcher->dispatch(
+                    new PPUCEvent(eventSource, word(0, fieldNum[i]), value[i])
+                );
+            }
         }
 
         if (platform == PLATFORM_WPC) {

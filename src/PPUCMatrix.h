@@ -109,7 +109,7 @@ protected:
     PPUCEventDispatcher* eventDispatcher;
 
     char eventSource;
-
+    byte maxChangesPerRead = 6;
     byte previousRows[NUM_COLS];
 
     int registeredFieldsCounter = -1;
