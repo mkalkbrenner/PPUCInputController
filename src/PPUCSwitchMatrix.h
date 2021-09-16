@@ -27,7 +27,7 @@ public:
 
         if (platform == PLATFORM_WPC) {
             // Read rows some micro seconds after column strobe signal.
-            rowReadDelay = 8;
+            rowReadDelay = 4;
         }
 
         maxChangesPerRead = 3;
