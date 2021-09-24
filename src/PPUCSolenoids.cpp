@@ -51,15 +51,23 @@ void PPUCSolenoids::update() {
 }
 
 void PPUCSolenoids::registerJ3(byte pin, byte number) {
-    if      (pin == 1) { registeredNum[6] = number; }
-    else if (pin == 2) { registeredNum[7] = number; }
-    else if (pin == 3) { registeredNum[8] = number; }
-    else if (pin == 4) { registeredNum[9] = number; }
-    else if (pin == 5) { registeredNum[10] = number; }
-    else if (pin == 6) { registeredNum[11] = number; }
-    // 7 is key
-    else if (pin == 8) { registeredNum[12] = number; }
-    else if (pin == 9) { registeredNum[13] = number; }
+    if      (pin == 1) { registeredNum[0] = number; }
+    else if (pin == 2) { registeredNum[1] = number; }
+    else if (pin == 3) { registeredNum[2] = number; }
+    else if (pin == 4) { registeredNum[3] = number; }
+    else if (pin == 5) { registeredNum[4] = number; }
+    // 6 is key
+    else if (pin == 7) { registeredNum[5] = number; }
+}
+
+void PPUCSolenoids::registerJ4(byte pin, byte number) {
+    if      (pin == 1) { registeredNum[0] = number; }
+    else if (pin == 2) { registeredNum[1] = number; }
+    // 3 is key
+    else if (pin == 4) { registeredNum[3] = number; }
+    else if (pin == 5) { registeredNum[4] = number; }
+    else if (pin == 6) { registeredNum[2] = number; }
+    else if (pin == 7) { registeredNum[5] = number; }
 }
 
 void PPUCSolenoids::registerJ124(byte pin, byte number) {
@@ -72,7 +80,7 @@ void PPUCSolenoids::registerJ124(byte pin, byte number) {
 
 void PPUCSolenoids::registerJ123(byte pin, byte number) {
     if      (pin == 1) { registeredNum[6] = number; }
-        // 2 is key
+    // 2 is key
     else if (pin == 3) { registeredNum[7] = number; }
     else if (pin == 4) { registeredNum[8] = number; }
     else if (pin == 5) { registeredNum[9] = number; }

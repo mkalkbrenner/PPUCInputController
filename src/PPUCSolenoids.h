@@ -19,7 +19,8 @@ public:
     PPUCSolenoids(String controllerType, PPUCEventDispatcher* eD);
 
     // WPC
-    void registerJ3(byte pin, byte number);
+    void registerJ3(byte pin, byte number); // A16100 8-Driver PCB Assembly
+    void registerJ4(byte pin, byte number); // A16100 8-Driver PCB Assembly
     void registerJ122(byte pin, byte number);
     void registerJ123(byte pin, byte number);
     void registerJ124(byte pin, byte number);
