@@ -43,9 +43,9 @@ PPUCSolenoids::PPUCSolenoids(String controllerType, PPUCEventDispatcher* ed) {
 void PPUCSolenoids::update() {
     for (int i = 0; i < NUM_PINS; i++) {
         previousPinStates[i] = pinStates[i];
-        pinStates[i] = digitalRead(pins[i]);
-        if (registeredNum[i] && (previousPinStates[i] != pinStates[i])) {
-            eventDispatcher->dispatch(new PPUCEvent(EVENT_SOURCE_SOLENOID, word(registeredNum[i]), pinStates[i]));
+        pinStates[i] = digitalRead(pins[i]) == HIGH;
+        if ((registeredNum[i] != 0) && (previousPinStates[i] != pinStates[i])) {
+            eventDispatcher->dispatch(new PPUCEvent(EVENT_SOURCE_SOLENOID, word(0, registeredNum[i]), pinStates[i]));
         }
     }
 }
@@ -70,12 +70,16 @@ void PPUCSolenoids::registerJ4(byte pin, byte number) {
     else if (pin == 7) { registeredNum[5] = number; }
 }
 
-void PPUCSolenoids::registerJ124(byte pin, byte number) {
+void PPUCSolenoids::registerJ122(byte pin, byte number) {
     if      (pin == 1) { registeredNum[6] = number; }
     else if (pin == 2) { registeredNum[7] = number; }
     else if (pin == 3) { registeredNum[8] = number; }
-    // 4 is key
-    else if (pin == 5) { registeredNum[9] = number; }
+    else if (pin == 4) { registeredNum[9] = number; }
+    else if (pin == 5) { registeredNum[10] = number; }
+    else if (pin == 6) { registeredNum[11] = number; }
+    // 7 is key
+    else if (pin == 8) { registeredNum[12] = number; }
+    else if (pin == 9) { registeredNum[13] = number; }
 }
 
 void PPUCSolenoids::registerJ123(byte pin, byte number) {
@@ -85,6 +89,15 @@ void PPUCSolenoids::registerJ123(byte pin, byte number) {
     else if (pin == 4) { registeredNum[8] = number; }
     else if (pin == 5) { registeredNum[9] = number; }
 }
+
+void PPUCSolenoids::registerJ124(byte pin, byte number) {
+    if      (pin == 1) { registeredNum[6] = number; }
+    else if (pin == 2) { registeredNum[7] = number; }
+    else if (pin == 3) { registeredNum[8] = number; }
+    // 4 is key
+    else if (pin == 5) { registeredNum[9] = number; }
+}
+
 
 void PPUCSolenoids::registerJ125(byte pin, byte number) {
     if      (pin == 1) { registeredNum[14] = number; }
