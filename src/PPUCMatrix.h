@@ -90,7 +90,7 @@ public:
 
     virtual void stop() = 0;
 
-    void update();
+    virtual void update();
 
     void print();
 

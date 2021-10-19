@@ -1,19 +1,23 @@
 #include "PPUCLightMatrix.h"
 
-// see https://forum.arduino.cc/index.php?topic=398610.0
-PPUCLightMatrix* PPUCLightMatrix::lightMatrixInstance = NULL;
-
 void PPUCLightMatrix::start() {
-    Timer1.attachInterrupt(PPUCLightMatrix::_readRow);
+    running = true;
 }
 
 void PPUCLightMatrix::stop() {
-    Timer1.detachInterrupt();
+    running = false;
 }
 
-void PPUCLightMatrix::_readRow() {
+void PPUCLightMatrix::update() {
+    if (running) {
+        readRow();
+        PPUCMatrix::update();
+    }
+}
+
+void PPUCLightMatrix::readRow() {
     // 74HC165 16bit sampling
-    uint16_t inData = lightMatrixInstance->sampleInput();
+    uint16_t inData = sampleInput();
     bool validInput = true;
 
     byte inColMask = (inData >> 8); // LSB is col 0, MSB is col 7
@@ -50,14 +54,14 @@ void PPUCLightMatrix::_readRow() {
     // matrix state is left unchanged.
     // The matrix is updated only once per original column cycle. The code
     // waits for a number of consecutive consistent information before updating the matrix.
-    if (validInput && lightMatrixInstance->updateValid(inColMask, inRowMask)) {
+    if (validInput && updateValid(inColMask, inRowMask)) {
         // update the current column
-        lightMatrixInstance->rows[inCol] = inRowMask;
+        rows[inCol] = inRowMask;
     }
 
     // remember the last column and row samples
-    lightMatrixInstance->sLastColMask = inColMask;
-    lightMatrixInstance->sLastRowMask = inRowMask;
+    sLastColMask = inColMask;
+    sLastRowMask = inRowMask;
 }
 
 uint16_t PPUCLightMatrix::sampleInput() {
@@ -88,6 +92,11 @@ bool PPUCLightMatrix::updateValid(byte inColMask, byte inRowMask) {
     static byte sConsistentSamples = 0;
     static byte sLastUpdColMask = 0x00;
     bool valid = false;
+    //if (inRowMask != 255) {
+    //    Serial.println(sConsistentSamples);
+    //    Serial.println(inColMask);
+    //    Serial.println(inRowMask);
+    //}
 
     // check if the current column has not been handled already
     if (inColMask != sLastUpdColMask) {
@@ -95,7 +104,7 @@ bool PPUCLightMatrix::updateValid(byte inColMask, byte inRowMask) {
         if ((inColMask != sLastColMask) || (inRowMask != sLastRowMask)) {
             sConsistentSamples = 0;
         }
-            // count number of consecutive samples with consistent data
+        // count number of consecutive samples with consistent data
         else if (sConsistentSamples < 255) {
             sConsistentSamples++;
         }
