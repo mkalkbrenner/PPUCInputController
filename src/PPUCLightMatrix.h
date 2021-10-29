@@ -16,7 +16,7 @@
 #include "PPUCMatrix.h"
 
 // Number of consistent data samples required for matrix update
-#define SINGLE_UPDATE_CONS 3
+#define SINGLE_UPDATE_CONS 2
 
 // original matrix update interval [us]
 #define ORIG_INT (2000)
