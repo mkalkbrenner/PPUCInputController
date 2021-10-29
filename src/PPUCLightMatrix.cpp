@@ -1,25 +1,20 @@
 #include "PPUCLightMatrix.h"
 
+// see https://forum.arduino.cc/index.php?topic=398610.0
+PPUCLightMatrix* PPUCLightMatrix::lightMatrixInstance = NULL;
+
 void PPUCLightMatrix::start() {
-    running = true;
+    Timer1.attachInterrupt(PPUCLightMatrix::_readRow);
 }
 
 void PPUCLightMatrix::stop() {
-    running = false;
+    Timer1.detachInterrupt();
 }
 
-void PPUCLightMatrix::update() {
-    if (running) {
-        readRow();
-        PPUCMatrix::update();
-    }
-}
-
-void PPUCLightMatrix::readRow() {
+void PPUCLightMatrix::_readRow() {
     // 74HC165 16bit sampling
-    uint16_t inData = sampleInput();
+    uint16_t inData = lightMatrixInstance->sampleInput();
     bool validInput = true;
-
     byte inColMask = (inData >> 8); // LSB is col 0, MSB is col 7
     byte inRowMask = ~(byte)inData; // high means OFF, LSB is row 0, MSB is row 7
 
@@ -54,14 +49,10 @@ void PPUCLightMatrix::readRow() {
     // matrix state is left unchanged.
     // The matrix is updated only once per original column cycle. The code
     // waits for a number of consecutive consistent information before updating the matrix.
-    if (validInput && updateValid(inColMask, inRowMask)) {
+    if (validInput && lightMatrixInstance->updateValid(inCol, inRowMask)) {
         // update the current column
-        rows[inCol] = inRowMask;
+        lightMatrixInstance->rows[inCol] = inRowMask;
     }
-
-    // remember the last column and row samples
-    sLastColMask = inColMask;
-    sLastRowMask = inRowMask;
 }
 
 uint16_t PPUCLightMatrix::sampleInput() {
@@ -88,37 +79,21 @@ uint16_t PPUCLightMatrix::sampleInput() {
     return data;
 }
 
-bool PPUCLightMatrix::updateValid(byte inColMask, byte inRowMask) {
-    static byte sConsistentSamples = 0;
-    static byte sLastUpdColMask = 0x00;
-    bool valid = false;
-    //if (inRowMask != 255) {
-    //    Serial.println(sConsistentSamples);
-    //    Serial.println(inColMask);
-    //    Serial.println(inRowMask);
-    //}
-
+bool PPUCLightMatrix::updateValid(byte inCol, byte inRowMask) {
     // check if the current column has not been handled already
-    if (inColMask != sLastUpdColMask) {
+    if (inRowMask != lastRowMask[inCol]) {
         // reset the counter when the data changes
-        if ((inColMask != sLastColMask) || (inRowMask != sLastRowMask)) {
-            sConsistentSamples = 0;
-        }
-        // count number of consecutive samples with consistent data
-        else if (sConsistentSamples < 255) {
-            sConsistentSamples++;
-        }
-
-        // The matrix is updated only once per original column cycle.
-        // The code waits for a number of consecutive consistent information
-        // before updating the matrix.
-        // This also avoids ghosting issues, see
-        // https://emmytech.com/arcade/led_ghost_busting/index.html for details.
-        if (sConsistentSamples >= (SINGLE_UPDATE_CONS - 1)) {
-            sLastUpdColMask = inColMask;
-            valid = true;
-        }
+        consistentSamples[inCol] = 1;
+        lastRowMask[inCol] = inRowMask;
+    }
+    // count number of consecutive samples with consistent data
+    else if (consistentSamples[inCol] < 255) {
+        consistentSamples[inCol]++;
     }
 
-    return valid;
+    if (consistentSamples[inCol] >= SINGLE_UPDATE_CONS) {
+        return true;
+    }
+
+    return false;
 }
