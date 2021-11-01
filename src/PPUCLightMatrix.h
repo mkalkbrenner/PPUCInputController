@@ -18,20 +18,8 @@
 // Number of consistent data samples required for matrix update
 #define SINGLE_UPDATE_CONS 2
 
-// original matrix update interval [us]
-#define ORIG_INT (2000)
-
 // local time interval, config A [us]
 #define TTAG_INT_A (250)
-
-// cycles per original interval, config A
-#define ORIG_CYCLES_A (ORIG_INT / TTAG_INT_A)
-
-// local time interval, config B [us]
-#define TTAG_INT_B (500)
-
-// cycles per original interval, config B
-#define ORIG_CYCLES_B (ORIG_INT / TTAG_INT_B)
 
 class PPUCLightMatrix : public PPUCMatrix {
 public:

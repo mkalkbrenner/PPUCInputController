@@ -28,6 +28,12 @@ public:
         if (platform == PLATFORM_WPC) {
             // Read rows some micro seconds after column strobe signal.
             rowReadDelay = 4;
+
+            // On WPC the switches are read every 2ms. Ensure that we have a complete read before sending next events.
+            updateDelay = 3;
+        }
+        else if (platform == PLATFORM_DATA_EAST) {
+            // @todo
         }
 
         maxChangesPerRead = 3;

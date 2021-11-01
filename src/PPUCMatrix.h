@@ -118,6 +118,7 @@ protected:
 
     byte platform;
 
+    byte updateDelay = 0;
     uint32_t nextUpdate = 0;
 };
 

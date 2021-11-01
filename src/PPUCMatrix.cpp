@@ -44,50 +44,47 @@ void PPUCMatrix::registerAllFieldsAsEvent() {
 }
 
 void PPUCMatrix::update() {
-    uint32_t ms = millis();
-    if (nextUpdate < ms) {
-        byte fieldNum[maxChangesPerRead] = {0};
-        byte value[maxChangesPerRead] = {0};
-        byte counter = 0;
+    if (updateDelay > 0) {
+        uint32_t ms = millis();
 
-        for (int col = 0; col < lastColToRead; col++) {
-            for (int row = 0; row < 8; row++) {
-                word row_col = word(row, col);
-                for (byte i = 0; i <= registeredFieldsCounter; i++) {
-                    if (row_col == registeredFieldRowCol[i]) {
-                        byte bit = 1 << row;
-                        if ((rows[col] & bit) != (previousRows[col] & bit)) {
-                            if (counter < maxChangesPerRead) {
-                                fieldNum[counter] = registeredFieldNum[i];
-                                value[counter++] = (rows[col] & bit) ? 1 : 0;
-                            }
-                            else {
-                                // Too many changes, assume erroneous read.
-                                counter = 255;
-                            }
+        if (nextUpdate > ms) {
+            return;
+        }
+
+        nextUpdate = ms + updateDelay;
+    }
+
+    byte fieldNum[maxChangesPerRead] = {0};
+    byte value[maxChangesPerRead] = {0};
+    byte counter = 0;
+
+    for (int col = 0; col < lastColToRead; col++) {
+        for (int row = 0; row < 8; row++) {
+            word row_col = word(row, col);
+            for (byte i = 0; i <= registeredFieldsCounter; i++) {
+                if (row_col == registeredFieldRowCol[i]) {
+                    byte bit = 1 << row;
+                    if ((rows[col] & bit) != (previousRows[col] & bit)) {
+                        if (counter < maxChangesPerRead) {
+                            fieldNum[counter] = registeredFieldNum[i];
+                            value[counter++] = (rows[col] & bit) ? 1 : 0;
+                        }
+                        else {
+                            // Too many changes, assume erroneous read.
+                            return;
                         }
                     }
                 }
             }
-            previousRows[col] = rows[col];
-            rows[col] = B00000000;
         }
+        previousRows[col] = rows[col];
+    }
 
-        if (counter <= maxChangesPerRead) {
-            for (int i = 0; i < counter; i++) {
-                eventDispatcher->dispatch(
-                    new PPUCEvent(eventSource, word(0, fieldNum[i]), value[i])
-                );
-            }
-        }
-
-        if (platform == PLATFORM_WPC) {
-            // On WPC the switches are read every 2ms. Ensure that we have a complete read before sending next events.
-            nextUpdate = ms + 3;
-        }
-        else if (platform == PLATFORM_DATA_EAST) {
-            // @todo
-            nextUpdate = ms + 1;
+    if (counter <= maxChangesPerRead) {
+        for (int i = 0; i < counter; i++) {
+            eventDispatcher->dispatch(
+                new PPUCEvent(eventSource, word(0, fieldNum[i]), value[i])
+            );
         }
     }
 }

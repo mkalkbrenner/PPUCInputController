@@ -14,7 +14,6 @@ void PPUCLightMatrix::stop() {
 void PPUCLightMatrix::_readRow() {
     // 74HC165 16bit sampling
     uint16_t inData = lightMatrixInstance->sampleInput();
-    bool validInput = true;
     byte inColMask = (inData >> 8); // LSB is col 0, MSB is col 7
     byte inRowMask = ~(byte)inData; // high means OFF, LSB is row 0, MSB is row 7
 
@@ -30,7 +29,7 @@ void PPUCLightMatrix::_readRow() {
         case 0x20: inCol = 5; break;
         case 0x40: inCol = 6; break;
         case 0x80: inCol = 7; break;
-        default: {
+        default:
             // This may happen if the sample is taken in between column transition.
             // Depending on the pinball ROM version the duration of this transition varies.
             // On a Whitewater with Home ROM LH6 (contains anti ghosting updates) this
@@ -40,16 +39,15 @@ void PPUCLightMatrix::_readRow() {
             // columns enabled at the same time due to slow transistor deactivation. Both
             // cases are caught here.
             // See also https://emmytech.com/arcade/led_ghost_busting/index.html for details.
-            validInput = false;
-        }
-        break;
+            return;
     }
 
     // Update only with a valid input. If the input is invalid the current
     // matrix state is left unchanged.
     // The matrix is updated only once per original column cycle. The code
     // waits for a number of consecutive consistent information before updating the matrix.
-    if (validInput && lightMatrixInstance->updateValid(inCol, inRowMask)) {
+    if (lightMatrixInstance->updateValid(inCol, inRowMask)) {
+        //Serial.print(inCol + 1); Serial.print(": "); Serial.println(inRowMask, BIN);
         // update the current column
         lightMatrixInstance->rows[inCol] = inRowMask;
     }
