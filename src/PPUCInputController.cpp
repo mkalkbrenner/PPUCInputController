@@ -12,6 +12,7 @@ PPUCInputController::PPUCInputController(String controllerType, byte pf) {
         _lightMatrix = new PPUCLightMatrix(_eventDispatcher, platform);
         _pin2Dmd = new PPUCPIN2DMD(_eventDispatcher);
         _pupComLink = new PPUCPUPComLink();
+        _vpxComLink = new PPUCVPXComLink(_eventDispatcher);
         _testButtons = new PPUCInputControllerTestButtons(_eventDispatcher);
     } else {
         Serial.print("Unsupported Input Controller: ");
@@ -37,6 +38,10 @@ PPUCPIN2DMD* PPUCInputController::pin2Dmd() {
 
 PPUCPUPComLink* PPUCInputController::pupComLink() {
     return _pupComLink;
+}
+
+PPUCVPXComLink* PPUCInputController::vpxComLink() {
+    return _vpxComLink;
 }
 
 PPUCInputControllerTestButtons* PPUCInputController::testButtons() {

@@ -1,20 +1,20 @@
 /*
-  PPUCPIN2DMD.h
-  Created by Markus Kalkbrenner, 2020-2021.
+  PPUCVPXComLink.h
+  Created by Markus Kalkbrenner, 2021.
 
   Play more pinball!
 */
 
-#ifndef PPUCPIN2DMD_h
-#define PPUCPIN2DMD_h
+#ifndef PPUCVPXCOMLINK_h
+#define PPUCVPXCOMLINK_h
 
 #include <Arduino.h>
 #include <PPUCEvent.h>
 #include <PPUCEventDispatcher.h>
 
-class PPUCPIN2DMD {
+class PPUCVPXComLink {
 public:
-    PPUCPIN2DMD(PPUCEventDispatcher* eD) {
+    PPUCVPXComLink(PPUCEventDispatcher* eD) {
         eventDispatcher = eD;
     }
 
@@ -30,6 +30,8 @@ private:
     HardwareSerial* hwSerial;
 
     bool debug = false;
+
+    bool led = false;
 
 };
 
