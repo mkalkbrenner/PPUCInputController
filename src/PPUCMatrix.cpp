@@ -33,7 +33,7 @@ void PPUCMatrix::registerAllFieldsAsEvent() {
             }
         }
     }
-    else if (platform == PLATFORM_DATA_EAST) {
+    else if (platform == PLATFORM_DATA_EAST || platform == PLATFORM_SYS11) {
         byte number = 0;
         for (byte col = 1; col <= lastColToRead; col++) {
             for (byte row = 1; row <= 8; row++) {

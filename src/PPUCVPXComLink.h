@@ -22,14 +22,10 @@ public:
 
     void update();
 
-    void setDebug(bool value);
-
 private:
     PPUCEventDispatcher* eventDispatcher;
 
     HardwareSerial* hwSerial;
-
-    bool debug = false;
 
     bool led = false;
 

@@ -35,6 +35,9 @@ public:
         else if (platform == PLATFORM_DATA_EAST) {
             // @todo
         }
+        else if (platform == PLATFORM_SYS11) {
+            // @todo
+        }
 
         maxChangesPerRead = 3;
 

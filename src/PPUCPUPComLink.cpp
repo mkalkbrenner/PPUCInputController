@@ -42,16 +42,21 @@ byte PPUCPUPComLink::read() {
 }
 
 void PPUCPUPComLink::write(byte command, char msgtype, word msgindex, word msgvalue) {
-    byte msg[8];
+    // Send to PUP Com Link. But only if there's room left in write buffer. Otherwise the program will be blocked. The
+    // buffer gets full if the data is not fetched by PUP Com Link for any reason.
+    // @todo Possible optimization to check hwSerial->availableForWrite() >= 8 failed on Arduino for unknown reason.
+    //if (hwSerial->availableForWrite() >= 8) {
+        byte msg[8];
 
-    msg[0] = command;
-    msg[1] = msgtype;
-    msg[2] = highByte(msgindex);
-    msg[3] = lowByte(msgindex);
-    msg[4] = highByte(msgvalue);
-    msg[5] = lowByte(msgvalue);
-    msg[6] = msg[0]^msg[1]^msg[2]^msg[3]^msg[4]^msg[5];
-    msg[7] = PUP_EOF;
+        msg[0] = command;
+        msg[1] = msgtype;
+        msg[2] = highByte(msgindex);
+        msg[3] = lowByte(msgindex);
+        msg[4] = highByte(msgvalue);
+        msg[5] = lowByte(msgvalue);
+        msg[6] = msg[0] ^ msg[1] ^ msg[2] ^ msg[3] ^ msg[4] ^ msg[5];
+        msg[7] = PUP_EOF;
 
-    hwSerial->write(msg, 8);
+        hwSerial->write(msg, 8);
+    //}
 }
